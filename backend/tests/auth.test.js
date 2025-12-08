@@ -68,7 +68,7 @@ describe('Auth API', () => {
     // Register a test user
     await request(testApp).post('/api/register').send({ username: 'ratelimituser', password: 'testpass' });
     
-    // Make 4 login attempts (these should all succeed without rate limiting)
+    // Make 4 login attempts (these should fail authentication but not hit rate limit yet)
     for (let i = 0; i < 4; i++) {
       const res = await request(testApp).post('/api/login').send({ username: 'ratelimituser', password: 'wrong' });
       expect(res.statusCode).toBe(401); // Wrong password, but should not be rate limited yet
