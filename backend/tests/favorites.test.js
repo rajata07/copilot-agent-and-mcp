@@ -111,4 +111,53 @@ describe('Favorites API', () => {
       .send({ bookId: '1' });
     expect(res.statusCode).toBe(401);
   });
+
+  // generated-by-copilot: Tests for DELETE /api/favorites/:bookId
+  it('DELETE /api/favorites/:bookId should remove a book from favorites', async () => {
+    const token = getToken('sandra');
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const sandra = users.find(u => u.username === 'sandra');
+    const favoriteBookId = sandra.favorites[0];
+    if (!favoriteBookId) return; // skip if no favorites
+    
+    const res = await request(app)
+      .delete(`/api/favorites/${favoriteBookId}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toMatch(/removed/);
+    
+    // Verify the book is actually removed
+    const updatedUsers = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const updatedSandra = updatedUsers.find(u => u.username === 'sandra');
+    expect(updatedSandra.favorites).not.toContain(favoriteBookId);
+  });
+
+  it('DELETE /api/favorites/:bookId should 404 when book not in favorites', async () => {
+    const token = getToken('sandra');
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const books = JSON.parse(fs.readFileSync(booksFile, 'utf-8'));
+    const sandra = users.find(u => u.username === 'sandra');
+    const notFavorite = books.find(b => !sandra.favorites.includes(b.id));
+    if (!notFavorite) return; // skip if all are favorites
+    
+    const res = await request(app)
+      .delete(`/api/favorites/${notFavorite.id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(404);
+    expect(res.body.message).toMatch(/not in favorites/);
+  });
+
+  it('DELETE /api/favorites/:bookId should fail without auth', async () => {
+    const res = await request(app)
+      .delete('/api/favorites/1');
+    expect(res.statusCode).toBe(401);
+  });
+
+  it('DELETE /api/favorites/:bookId should 404 for non-existent user', async () => {
+    const token = getToken('nouser');
+    const res = await request(app)
+      .delete('/api/favorites/1')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(404);
+  });
 });
