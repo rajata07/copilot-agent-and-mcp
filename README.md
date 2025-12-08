@@ -8,7 +8,8 @@
 Book Favorites is a full-stack web application that allows users to:
 - Register for a new account or log in with existing credentials
 - Browse a curated list of 50 books
-- Add books from their personal favorites list
+- Add books to their personal favorites list
+- Remove books from their favorites list
 - View their favorite books in a dedicated section
 - Enjoy a clean, modern, and responsive user interface
 - Experience protected routes (only logged-in users can access book and favorites pages)
