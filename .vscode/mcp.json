@@ -7,6 +7,11 @@
       "args": [
         "/path-to/github-copilot-agent/book-database/build/index.js"
       ]
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"]
     }
   }
 }
