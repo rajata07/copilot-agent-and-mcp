@@ -50,4 +50,37 @@ describe('Auth API', () => {
     const res = await request(app).post('/api/login').send({ username: '' });
     expect(res.statusCode).toBe(401);
   });
+
+  // generated-by-copilot: Test rate limiting on login endpoint
+  it('POST /api/login should enforce rate limiting after 5 attempts', async () => {
+    // Create a fresh app instance to avoid rate limit contamination from other tests
+    const testApp = express();
+    testApp.use(express.json());
+    testApp.use('/api', createApiRouter({
+      usersFile: path.join(__dirname, '../data/test-users.json'),
+      booksFile: path.join(__dirname, '../data/test-books.json'),
+      readJSON: (file) => require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf-8')) : [],
+      writeJSON: (file, data) => require('fs').writeFileSync(file, JSON.stringify(data, null, 2)),
+      authenticateToken: (req, res, next) => next(),
+      SECRET_KEY: 'test_secret',
+    }));
+
+    // Register a test user
+    await request(testApp).post('/api/register').send({ username: 'ratelimituser', password: 'testpass' });
+    
+    // Make 4 login attempts (these should all succeed without rate limiting)
+    for (let i = 0; i < 4; i++) {
+      const res = await request(testApp).post('/api/login').send({ username: 'ratelimituser', password: 'wrong' });
+      expect(res.statusCode).toBe(401); // Wrong password, but should not be rate limited yet
+    }
+    
+    // The 5th attempt should still work but is the last one allowed
+    const fifthAttempt = await request(testApp).post('/api/login').send({ username: 'ratelimituser', password: 'wrong' });
+    expect(fifthAttempt.statusCode).toBe(401);
+    
+    // The 6th attempt should be rate limited
+    const res = await request(testApp).post('/api/login').send({ username: 'ratelimituser', password: 'testpass' });
+    expect(res.statusCode).toBe(429); // Too Many Requests
+    expect(res.text).toContain('Too many login attempts');
+  });
 });

@@ -1,8 +1,18 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 
 function createAuthRouter({ usersFile, readJSON, writeJSON, SECRET_KEY }) {
   const router = express.Router();
+
+  // generated-by-copilot: Rate limiter for login endpoint to prevent brute force attacks
+  const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login requests per windowMs
+    message: 'Too many login attempts from this IP, please try again after 15 minutes',
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  });
 
   router.post('/register', (req, res) => {
     const { username, password } = req.body;
@@ -16,7 +26,7 @@ function createAuthRouter({ usersFile, readJSON, writeJSON, SECRET_KEY }) {
     res.status(201).json({ message: 'User registered' });
   });
 
-  router.post('/login', (req, res) => {
+  router.post('/login', loginLimiter, (req, res) => {
     const { username, password } = req.body;
     const users = readJSON(usersFile);
     const user = users.find(u => u.username === username && u.password === password);
