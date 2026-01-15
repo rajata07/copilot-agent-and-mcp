@@ -26,7 +26,6 @@ const Favorites = () => {
       return;
     }
     await dispatch(removeFavorite({ token, bookId }));
-    dispatch(fetchFavorites(token));
     setFeedback(`"${bookTitle}" removed from favorites`);
     setTimeout(() => setFeedback(''), 3000);
   };
