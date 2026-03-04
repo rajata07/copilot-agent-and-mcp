@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFavorites } from '../store/favoritesSlice';
+import { fetchFavorites, clearAllFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Favorites = () => {
@@ -17,6 +17,12 @@ const Favorites = () => {
     }
     dispatch(fetchFavorites(token));
   }, [dispatch, token, navigate]);
+
+  const handleClearAll = () => {
+    if (window.confirm('Are you sure you want to clear all your favorite books?')) {
+      dispatch(clearAllFavorites(token));
+    }
+  };
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Failed to load favorites.</div>;
@@ -41,13 +47,29 @@ const Favorites = () => {
           </p>
         </div>
       ) : (
-        <ul>
-          {favorites.map(book => (
-            <li key={book.id}>
-              <strong>{book.title}</strong> by {book.author}
-            </li>
-          ))}
-        </ul>
+        <>
+          <button
+            onClick={handleClearAll}
+            style={{
+              marginBottom: '1rem',
+              padding: '0.5rem 1.2rem',
+              background: '#e53935',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Clear All
+          </button>
+          <ul>
+            {favorites.map(book => (
+              <li key={book.id}>
+                <strong>{book.title}</strong> by {book.author}
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
