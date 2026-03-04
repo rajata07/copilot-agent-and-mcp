@@ -2,18 +2,11 @@
   {
     "username": "sandra",
     "password": "sandra",
-    "favorites": [
-      "1",
-      "2",
-      "7",
-      "15",
-      "9",
-      "6",
-      "5",
-      "16",
-      "14",
-      "20",
-      "21"
-    ]
+    "favorites": []
+  },
+  {
+    "username": "e2euser902",
+    "password": "e2epass864",
+    "favorites": []
   }
 ]
