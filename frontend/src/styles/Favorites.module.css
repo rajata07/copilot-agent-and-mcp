@@ -1,0 +1,58 @@
+/* generated-by-copilot: styles for the favorites list and remove button */
+.favoritesList {
+  list-style: none;
+  padding: 0;
+  max-width: 600px;
+  margin: 1rem auto;
+}
+
+.favoriteItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.removeBtn {
+  background: #e25555;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.removeBtn:hover {
+  background: #b83a3a;
+}
+
+.removeBtn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.feedback {
+  max-width: 600px;
+  margin: 0.5rem auto;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.feedbackSuccess {
+  background: #e6f7ee;
+  color: #1a7f4e;
+  border: 1px solid #b6e3cd;
+}
+
+.feedbackError {
+  background: #fdecec;
+  color: #b83a3a;
+  border: 1px solid #f3c2c2;
+}
