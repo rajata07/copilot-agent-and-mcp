@@ -18,7 +18,7 @@
 }
 
 .removeBtn {
-  background: #e25555;
+  background: #1976d2;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -29,7 +29,7 @@
 }
 
 .removeBtn:hover {
-  background: #b83a3a;
+  background: #115293;
 }
 
 .removeBtn:disabled {
